@@ -4,7 +4,7 @@ SVG Asset Generator.
 
 Create that cup of coffee logo you have been looking for.
 
-Under the hood uses (open ai's dalle 2)[https://openai.com/dall-e-2/] and the (image to svg library svgurt)[https://svgurt.com/]
+Under the hood uses [open ai's dalle 2](https://openai.com/dall-e-2/) and the [image to svg library svgurt](https://svgurt.com/)
 
 ## Development
 
@@ -14,6 +14,8 @@ Install node js from https://nodejs.org/en/download/
 
 ```bash
 $ # 1. Clone this repo and navigate to the cloned folder.
+$ git clone git@github.com:Anemy/svggen.git
+$ cd svggen
 $ # 2. Install the server dependencies:
 $ npm install
 ```
