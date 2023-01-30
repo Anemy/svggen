@@ -4,7 +4,7 @@ SVG Asset Generator.
 
 Create that cup of coffee logo you have been looking for.
 
-Under the hood uses [open ai's dalle 2](https://openai.com/dall-e-2/) and the [image to svg library svgurt](https://svgurt.com/)
+Under the hood uses [open ai's **dalle 2**](https://openai.com/dall-e-2/) and the [image to svg library **svgurt**](https://svgurt.com/)
 
 ## Development
 
