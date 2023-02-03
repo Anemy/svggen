@@ -2,7 +2,11 @@ import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-
 import { Configuration, OpenAIApi } from 'openai';
 // import { writeFile } from 'fs';
 // import { promisify } from 'util';
-// import svgurt from 'svgurt';
+
+// TODO: Once we're on node 17+ we can use the built in fetch api.
+import fetch from 'node-fetch';
+
+import svgurt from 'svgurt';
 
 dotenv.config();
 
@@ -16,6 +20,7 @@ async function run(assetText: string) {
 
   const prompt = `A black and white posterized icon of a ${assetText}`;
 
+  let imageUrl: string;
   try {
     const response = await openai.createImage({
       prompt,
@@ -25,6 +30,11 @@ async function run(assetText: string) {
     });
     console.log('Got DALLE-2 response:');
     console.log(response.data.data[0].url);
+
+    if (!response.data.data[0].url) {
+      throw new Error('no image');
+    }
+    imageUrl = response.data.data[0].url;
 
     // console.log(response.data.data[0].b64_json);
     // const runWriteFile = promisify(writeFile);
@@ -37,7 +47,31 @@ async function run(assetText: string) {
     } else {
       console.log(error.message);
     }
+    throw error;
   }
+
+  const imageResponse = await fetch(imageUrl);
+  const blob = await imageResponse.blob();
+  const arrayBuffer = await (blob as any /* blob type not full in current node-fetch typings version */).arrayBuffer();
+  const imageBuffer = Buffer.from(arrayBuffer);
+
+  const outputImageName = 'svg_output';
+
+  console.log('Running svgurt with a buffer from a url...');
+  const bufferConfig = {
+    imageBuffer,
+    imageBufferType: 'image/png',
+    output: `./${outputImageName}`,
+    svgRenderType: 'CIRCLE'
+  };
+
+  try {
+    await svgurt(bufferConfig);
+  } catch (err) {
+    console.log('Error trying buffer:', err);
+  }
+
+  console.log(`Created image "${outputImageName}"`);
 
   console.log('Done. Time elapsed (ms):', (Date.now() - startTime));
 }
